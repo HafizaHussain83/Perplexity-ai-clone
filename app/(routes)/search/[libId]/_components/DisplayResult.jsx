@@ -332,7 +332,7 @@ setLoadingSearch(true);
          await  GetSearchRecords();
           setSearchResults(prev => prev.map(chat => 
             chat.id === recordId 
-              ? { ...chat, aiResponse: runResp.data.data.result } 
+              ? { ...chat, aiResp: runResp.data.data.result } 
               : chat
           ));
         }
@@ -342,15 +342,30 @@ setLoadingSearch(true);
     }
   };
 
-   const GetSearchRecords = async () => {
-        let { data: Library, error } = await supabase
-            .from('Library')
-            .select('*,Chats(*)')
-            .eq('libId', libId)
-            .order('id', { foreignTable: 'Chats', ascending: true });
-            
-        setSearchResult(Library[0]);
-    };
+   
+const GetSearchRecords = async () => {
+  const { data: Library, error } = await supabase
+    .from('Library')
+    .select('*,Chats(*)')
+    .eq('libId', libId)
+    .order('id', { foreignTable: 'Chats', ascending: true });
+
+  if (error) {
+    console.error("GetSearchRecords error:", error);
+    return;
+  }
+
+  if (Library && Library[0]?.Chats) {
+    const chatsArray = Library[0].Chats.map(chat => ({
+      searchResult: chat.searchResult,
+      userSearchInput: chat.userSearchInput,
+      id: chat.id,
+      aiResp: chat.aiResponse || chat.aiResp // Handle both cases
+    }));
+
+    setSearchResults(chatsArray);
+  }
+};
 
 
   return (
@@ -401,10 +416,11 @@ setLoadingSearch(true);
                   <div>
                         {activeTab == 'Answer' ?
                             <AnswerDisplay 
-              chat={chat.searchResult}
-              activeTab={activeTab}
-              userQuery={chat.userSearchInput}
-              aiResponse={chat.aiResponse}     loadingSearch={loadingSearch}
+                 chat={chat.searchResult}
+  activeTab={activeTab}
+  userQuery={chat.userSearchInput}
+  aiResp={chat.aiResp}  // Make sure this matches the state property
+  loadingSearch={loadingSearch}
             />:
                             activeTab == 'Images' ? <ImageListTab chat={chat} />
                                 : activeTab == 'Source' ?
@@ -414,10 +430,18 @@ setLoadingSearch(true);
                     </div>
           <hr className="my-5 "/>
         </div>
+
+
+
+
       ))}
 
-<div className='bg-white w-full border rounded-lg 
-            shadow-md p-3 px-5 flex justify-between fixed bottom-6 max-w-md lg:max-w-xl xl:max-w-3xl'>
+
+
+
+
+{/* <div className='bg-white w-full border rounded-lg 
+    shadow-md p-3 px-5 flex justify-between fixed bottom-6 left-1/2 -translate-x-1/2 max-w-sm'>
                 <input placeholder='Type Anything...' className='outline-none w-full'
                     onChange={(e) => setUserInput(e.target.value)} value={userInput}
                     onKeyDown={(e) => {
@@ -427,7 +451,7 @@ setLoadingSearch(true);
                     }} />
                 {userInput && <Button onClick={getSearchApiResult} disabled={loadingSearch}>
                     {loadingSearch ? <Loader2Icon className='animate-spin' /> : <Send />}</Button>}
-            </div>
+            </div> */}
 
 
     </div>

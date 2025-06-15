@@ -2,22 +2,38 @@ import React from 'react';
 import SourceList from './SourceList';
 import DisplaySummery from './DisplaySummery';
 
-function AnswerDisplay({ chat, activeTab, userQuery , loadingSearch }) {
-  // Ensure chat is properly formatted
+function AnswerDisplay({ chat, activeTab, userQuery, aiResp, loadingSearch }) {
   const safeChat = Array.isArray(chat) ? chat : [];
-
+  
   return (
     <div>
       {activeTab === 'Answer' && (
         <div className='mt-5'>
-          <SourceList webResult={safeChat} />
-          <DisplaySummery aiResp={chat?.aiResp}  />
+          <SourceList webResult={safeChat} loadingSearch={loadingSearch} />
+          <DisplaySummery aiResp={aiResp} />
         </div>
       )}
-      
     </div>
   );
 }
+
+
+// function AnswerDisplay({ chat, activeTab, userQuery , loadingSearch }) {
+//   // Ensure chat is properly formatted
+//   const safeChat = Array.isArray(chat) ? chat : [];
+
+//   return (
+//     <div>
+//       {activeTab === 'Answer' && (
+//         <div className='mt-5'>
+//           <SourceList webResult={safeChat} />
+//           <DisplaySummery aiResp={chat?.aiResp}  />
+//         </div>
+//       )}
+      
+//     </div>
+//   );
+// }
 
 export default AnswerDisplay;
 
