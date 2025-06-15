@@ -82,11 +82,20 @@ export default function AppSidebar() {
         <div className=" pb-8 flex flex-col  ">
           <h2 className='text-gray-500'>Try Now</h2>
           <p className='text-gray-400 mb-4'>Upgrade for image upload ,smarter Ai & more copilot</p>
-          <button className={buttonVariants ({ variant: "secondary", size: "default" })}>                         
-              <span className="text-lg ">Learn More</span>      
-          </button>
+  <button
+    className={buttonVariants({
+      variant: "secondary",
+      size: "default",
+    }) + " mb-5"} // <-- Add margin-bottom here
+  >
+    <span className="text-lg">Learn More</span>
+  </button>
+
+          {/* <button className={buttonVariants ({ variant: "secondary", size: "default" })}>                         
+              <span className="text-lg mb-3 ">Learn More</span>      
+          </button> */}
           {/* <button varient ={'secondary'} className={'text-gray-500 mb-3'}>Learn More</button> */}
-          <UserButton/>
+          <UserButton className="mt-"/>
         </div>
       </SidebarFooter>
     </Sidebar>
